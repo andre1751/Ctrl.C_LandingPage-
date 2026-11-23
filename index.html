@@ -1,0 +1,574 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CTRL.web</title>
+<meta name="description" content="CTRL.web diseña y optimiza sitios web, tiendas online y landing pages. Tu web, bajo control.">
+
+<!-- Tipografía oficial: Poppins -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+<!-- Tailwind CSS (CDN, solo para prototipo) + tokens de marca -->
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          ink: '#0A0A0A', fog: '#F2F2F2', circuit: '#8C8C8C', muted: '#5C5C5C',
+          lime: '#C6F432', coral: '#FF5A4F', lilac: '#B197FC', sun: '#FFD23F'
+        },
+        fontFamily: { sans: ['Poppins', 'Arial', 'sans-serif'] },
+        borderRadius: { key: '12px', 'key-lg': '20px' },
+        boxShadow: {
+          'depth-sm': '-3px 3px 0 #0A0A0A',
+          'depth-md': '-5px 5px 0 #0A0A0A',
+          'depth-lg': '-8px 8px 0 #0A0A0A',
+          'depth-w': '-5px 5px 0 #FFFFFF'
+        },
+        keyframes: {
+          blink: { '0%,49%': { opacity: '1' }, '50%,100%': { opacity: '0' } },
+          float: { '0%,100%': { transform: 'translateY(0)' }, '50%': { transform: 'translateY(-10px)' } },
+          marquee: { to: { transform: 'translateX(-50%)' } }
+        },
+        animation: {
+          blink: 'blink 1s steps(1) infinite',
+          float: 'float 6s ease-in-out infinite',
+          marquee: 'marquee 36s linear infinite'
+        }
+      }
+    }
+  };
+</script>
+
+<!-- Componentes de la Tecla -->
+<style type="text/tailwindcss">
+  @layer base {
+    html { scroll-behavior: smooth; }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+    svg text { font-family: Poppins, Arial, sans-serif; }
+    :focus-visible { outline: 3px solid #0A0A0A; outline-offset: 3px; }
+    .on-dark :focus-visible { outline-color: #FFFFFF; }
+  }
+  @layer components {
+    .key { @apply inline-flex items-center justify-center rounded-key border-[3px] border-ink bg-white font-medium text-ink shadow-depth-md; }
+    .key-btn { @apply inline-flex items-center justify-center gap-3 rounded-key border-[3px] border-ink font-medium text-ink shadow-depth-sm transition-[transform,box-shadow] duration-150 motion-safe:hover:-translate-x-px motion-safe:hover:translate-y-px motion-safe:active:-translate-x-[3px] motion-safe:active:translate-y-[3px] active:shadow-none; }
+    .on-dark .key-btn { @apply border-white shadow-depth-w; }
+    .eyebrow { @apply text-[11px] font-normal uppercase leading-4 tracking-[0.15em] text-muted; }
+    .key-btn.tab[aria-selected="true"] { @apply shadow-depth-sm; background-color: var(--tab-color, #C6F432); }
+    a.dot[aria-current="true"] { @apply bg-ink; }
+  }
+</style>
+<style>
+  /* Conversación de ejemplo: los mensajes aparecen uno tras otro. Sin animación si el usuario reduce el movimiento. */
+  .chat-msg { opacity: 0; }
+  @media (prefers-reduced-motion: no-preference) {
+    .chat-msg { animation: chat-in .5s cubic-bezier(.2,.8,.2,1) forwards; animation-delay: var(--d); }
+  }
+  @keyframes chat-in {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: none; }
+  }
+</style>
+</head>
+
+<body class="bg-white font-sans text-ink antialiased">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <g id="tecla-g">
+      <g fill="var(--line,#0A0A0A)" stroke="var(--line,#0A0A0A)" stroke-width="3"><rect x="0" y="19" width="87" height="81" rx="17"/><rect x="1" y="18" width="87" height="81" rx="17"/><rect x="2" y="17" width="87" height="81" rx="17"/><rect x="3" y="16" width="87" height="81" rx="17"/><rect x="4" y="15" width="87" height="81" rx="17"/><rect x="5" y="14" width="87" height="81" rx="17"/><rect x="6" y="13" width="87" height="81" rx="17"/><rect x="7" y="12" width="87" height="81" rx="17"/><rect x="8" y="11" width="87" height="81" rx="17"/><rect x="9" y="10" width="87" height="81" rx="17"/><rect x="10" y="9" width="87" height="81" rx="17"/><rect x="11" y="8" width="87" height="81" rx="17"/><rect x="12" y="7" width="87" height="81" rx="17"/><rect x="13" y="6" width="87" height="81" rx="17"/><rect x="14" y="5" width="87" height="81" rx="17"/><rect x="15" y="4" width="87" height="81" rx="17"/><rect x="16" y="3" width="87" height="81" rx="17"/><rect x="17" y="2" width="87" height="81" rx="17"/><rect x="18" y="1" width="87" height="81" rx="17"/></g>
+      <rect x="19" y="0" width="87" height="81" rx="17" fill="var(--face,#FFFFFF)" stroke="var(--line,#0A0A0A)" stroke-width="3"/>
+      <text x="62.5" y="43" text-anchor="middle" dominant-baseline="central" font-weight="700" font-size="58" fill="var(--ink,#0A0A0A)">C</text>
+    </g>
+  </defs>
+</svg>
+
+<a href="#valor" data-scroll class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-key focus:border-[3px] focus:border-ink focus:bg-white focus:px-4 focus:py-2">Saltar al contenido</a>
+
+<!-- ============ NAVEGADOR CÍCLICO (puntos) ============ -->
+<nav aria-label="Secciones" class="fixed bottom-4 left-1/2 z-40 flex -translate-x-1/2 flex-row gap-3 rounded-key border-[3px] border-ink bg-white px-3 py-2.5 shadow-depth-sm md:bottom-auto md:left-auto md:right-5 md:top-1/2 md:-translate-x-0 md:-translate-y-1/2 md:flex-col md:px-2.5 md:py-3">
+  <a href="#inicio" data-scroll data-dot="inicio" aria-label="Inicio" class="dot block h-3.5 w-3.5 rounded-[4px] border-2 border-ink bg-white"></a><a href="#registro" data-scroll data-dot="registro" aria-label="Registro" class="dot block h-3.5 w-3.5 rounded-[4px] border-2 border-ink bg-white"></a><a href="#valor" data-scroll data-dot="valor" aria-label="Propuesta de valor" class="dot block h-3.5 w-3.5 rounded-[4px] border-2 border-ink bg-white"></a><a href="#explora" data-scroll data-dot="explora" aria-label="Explora" class="dot block h-3.5 w-3.5 rounded-[4px] border-2 border-ink bg-white"></a><a href="#contacto" data-scroll data-dot="contacto" aria-label="Contacto" class="dot block h-3.5 w-3.5 rounded-[4px] border-2 border-ink bg-white"></a>
+</nav>
+
+<main>
+
+<!-- ============ 1 · HERO ============ -->
+<section id="inicio" tabindex="-1" class="relative isolate flex min-h-[100svh] items-center justify-center overflow-hidden bg-white px-4 py-24">
+  <div aria-hidden="true" class="pointer-events-none absolute inset-0 -z-10">
+    <span class="key absolute h-11 sm:h-14 text-xs sm:text-base motion-safe:animate-float bg-coral top-[8%] left-[5%] w-14 sm:w-20" style="animation-delay:0s">Esc</span>
+<span class="key absolute h-11 sm:h-14 text-xs sm:text-base motion-safe:animate-float bg-lilac top-[12%] right-[6%] w-14 sm:w-20" style="animation-delay:-2s">Alt</span>
+<span class="key absolute h-11 sm:h-14 text-xs sm:text-base motion-safe:animate-float bg-sun bottom-[12%] left-[7%] w-20 sm:w-32" style="animation-delay:-3s">Tab</span>
+<span class="key absolute h-11 sm:h-14 text-xs sm:text-base motion-safe:animate-float bg-lime bottom-[9%] right-[5%] w-24 sm:w-36" style="animation-delay:-4s">Enter</span>
+<span class="key absolute h-11 sm:h-14 text-xs sm:text-base motion-safe:animate-float bg-ink !text-white top-[42%] left-[2%] hidden lg:inline-flex w-24" style="animation-delay:-1.5s">Ctrl</span>
+<span class="key absolute h-11 sm:h-14 text-xs sm:text-base motion-safe:animate-float bg-white top-[46%] right-[2%] hidden lg:inline-flex w-28" style="animation-delay:-2.5s">Shift</span>
+  </div>
+
+  <div class="flex w-full max-w-3xl flex-col items-center gap-8 text-center">
+    <svg class="logo-svg w-[min(88vw,540px)] h-auto" viewBox="-2 -2 400 104" role="img" aria-label="CTRL.web" style="--face:#C6F432;--line:#0A0A0A;--txt:#0A0A0A;--ink:#0A0A0A">
+  <use href="#tecla-g"/>
+  <text x="115" y="81" font-size="83" font-weight="700" fill="var(--txt)" textLength="150" lengthAdjust="spacingAndGlyphs">TRL</text>
+  <text x="271" y="81" font-size="52" font-weight="500" fill="var(--txt)" textLength="120" lengthAdjust="spacingAndGlyphs">.web</text>
+</svg>
+
+    <p class="min-h-[3.5rem] text-xl font-medium leading-7 sm:min-h-[3rem] sm:text-3xl sm:leading-10">
+      <span id="typed" aria-hidden="true">Tu web, bajo control.</span><span aria-hidden="true" class="ml-1 inline-block h-[1em] w-[3px] translate-y-[0.14em] bg-ink motion-safe:animate-blink"></span>
+      <span class="sr-only">Tu web, bajo control. Diseño, desarrollo y optimización de sitios web, tiendas online y landing pages.</span>
+    </p>
+
+    <a href="#registro" data-scroll class="key-btn min-h-[64px] bg-lime px-10 text-lg shadow-depth-md">Quiero mi web <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" ><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+
+    <a href="#valor" data-scroll class="flex items-center gap-2 text-sm font-medium text-muted underline-offset-4 hover:underline">Sigue explorando <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" ><path d="M12 5v14M6 13l6 6 6-6"/></svg></a>
+  </div>
+</section>
+
+<!-- ============ 1b · REGISTRO ============ -->
+<section id="registro" tabindex="-1" class="bg-fog px-4 py-20 sm:py-24">
+  <div class="mx-auto grid max-w-5xl items-center gap-12 lg:grid-cols-2">
+    <header class="flex flex-col gap-6">
+      <span class="eyebrow !text-ink">Cuéntanos tu idea</span>
+      <h2 class="text-balance text-3xl font-bold leading-10 sm:text-4xl sm:leading-[1.2]">Cuéntanos de tu negocio.</h2>
+      <p class="text-lg font-light leading-8">Te respondemos con una propuesta clara: qué haremos, cuánto tardará y cómo trabajaremos juntos.</p>
+      <ul class="mt-2 flex flex-col gap-4">
+        <li class="flex items-start gap-3 text-base font-normal leading-6"><span class="key mt-0.5 h-6 w-6 shrink-0 !rounded-md !border-2 bg-white !shadow-none"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" ><path d="M4 12l5 5L20 6"/></svg></span>Respuesta personal, no un mensaje automático.</li>
+        <li class="flex items-start gap-3 text-base font-normal leading-6"><span class="key mt-0.5 h-6 w-6 shrink-0 !rounded-md !border-2 bg-white !shadow-none"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" ><path d="M4 12l5 5L20 6"/></svg></span>Sin compromiso: hablar con nosotros no cuesta nada.</li>
+        <li class="flex items-start gap-3 text-base font-normal leading-6"><span class="key mt-0.5 h-6 w-6 shrink-0 !rounded-md !border-2 bg-white !shadow-none"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" ><path d="M4 12l5 5L20 6"/></svg></span>Tu web y tu dominio quedan a tu nombre.</li>
+      </ul>
+      <div role="log" aria-label="Ejemplo de conversación con CTRL.web" class="flex flex-col gap-3 rounded-key-lg border-[3px] border-ink bg-ink p-4 text-white shadow-depth-md">
+        <div class="flex items-center justify-between">
+          <span class="text-xs uppercase tracking-[0.15em]">Así responde CTRL.web</span>
+          <span class="inline-flex items-center gap-2 rounded-full border-2 border-coral px-3 py-1 text-xs font-medium text-coral"><span class="h-2 w-2 rounded-full bg-coral"></span>En línea</span>
+        </div>
+        <div class="chat-msg flex items-end justify-end gap-3" style="--d:0.3s">
+          <p class="max-w-[80%] rounded-key bg-coral px-3 py-2 text-sm font-normal leading-5 text-ink">¡Hola! Te preparamos una propuesta clara para tu negocio.</p>
+          <span class="key h-7 w-7 shrink-0 bg-lime !border-white !shadow-none text-sm font-bold text-ink">C</span>
+        </div>
+        <div class="chat-msg flex items-end justify-start gap-3" style="--d:1.8s">
+          <p class="max-w-[80%] rounded-key bg-white px-3 py-2 text-sm font-normal leading-5 text-ink">¡Gracias! ¿Podemos hacer una reunión?</p>
+        </div>
+      </div>
+    </header>
+
+    <form id="registro-form" novalidate class="w-full rounded-key-lg border-[3px] border-coral bg-white p-6 text-left shadow-depth-md sm:p-8">
+      <div class="grid gap-5 sm:grid-cols-2">
+        <div class="flex flex-col gap-2">
+          <label for="rg-nombre" class="text-sm font-medium">Tu nombre</label>
+          <input id="rg-nombre" name="nombre" type="text" autocomplete="name" required class="h-12 w-full rounded-key border-2 border-coral bg-white px-4 text-base font-normal text-ink">
+        </div>
+        <div class="flex flex-col gap-2">
+          <label for="rg-whatsapp" class="text-sm font-medium">WhatsApp</label>
+          <input id="rg-whatsapp" name="whatsapp" type="tel" autocomplete="tel" required class="h-12 w-full rounded-key border-2 border-coral bg-white px-4 text-base font-normal text-ink">
+        </div>
+      </div>
+
+      <div class="mt-5 flex flex-col gap-2">
+        <label for="rg-email" class="text-sm font-medium">Correo electrónico</label>
+        <input id="rg-email" name="email" type="email" autocomplete="email" required class="h-12 w-full rounded-key border-2 border-coral bg-white px-4 text-base font-normal text-ink">
+      </div>
+
+      <div class="mt-5 flex flex-col gap-2">
+        <label for="rg-mensaje" class="text-sm font-medium">Mensaje</label>
+        <textarea id="rg-mensaje" name="mensaje" rows="4" required placeholder="Cuéntanos qué hace tu negocio y qué te gustaría que hiciera tu web." class="w-full resize-y rounded-key border-2 border-coral bg-white px-4 py-3 text-base font-normal text-ink placeholder:text-muted"></textarea>
+      </div>
+
+      <label class="mt-5 flex items-start gap-3 text-sm font-normal leading-5 text-ink">
+        <input name="acepto" type="checkbox" required class="mt-0.5 h-5 w-5 shrink-0 rounded-[6px] border-2 border-coral accent-ink">
+        <span>Acepto que traten mis datos para que me contacten.</span>
+      </label>
+
+      <button type="submit" class="key-btn mt-6 min-h-[52px] w-full border-coral bg-coral px-6 text-base text-ink">Quiero mi propuesta <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" ><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+      <p class="mt-3 text-sm font-light text-ink">Usamos tus datos solo para responderte.</p>
+      <p id="rg-status" role="status" class="mt-3 min-h-[1.5rem] text-sm font-medium text-ink"></p>
+    </form>
+  </div>
+  <div class="mx-auto mt-10 flex max-w-5xl justify-center">
+    <a href="#valor" data-scroll class="key-btn min-h-[52px] bg-white px-6 text-sm">Siguiente: Lo que hacemos <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" ><path d="M12 5v14M6 13l6 6 6-6"/></svg></a>
+  </div>
+</section>
+
+<!-- ============ 2 · PROPUESTA DE VALOR (sin precios) ============ -->
+<section id="valor" tabindex="-1" class="bg-lime px-4 py-20 sm:py-24">
+  <div class="mx-auto flex max-w-6xl flex-col gap-12">
+    <header class="flex max-w-2xl flex-col gap-4">
+      <span class="eyebrow !text-ink">Lo que hacemos</span>
+      <h2 class="text-balance text-3xl font-bold leading-10 sm:text-4xl sm:leading-[1.2]">Tu negocio en la web, sin complicaciones.</h2>
+      <p class="text-lg font-light leading-8">Diseñamos, construimos y optimizamos para que tengas una presencia web profesional, rápida y fácil de controlar.</p>
+    </header>
+    <ul class="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+      <li class="flex flex-col gap-5 rounded-key-lg border-[3px] border-ink bg-white p-7 shadow-depth-md transition-transform duration-150 motion-safe:hover:-translate-x-px motion-safe:hover:translate-y-px">
+  <h3 class="text-xl font-medium leading-7">Diseño de marca</h3>
+  <p class="text-base font-light leading-7">Logo, colores y tipografía para que tu negocio se vea coherente en todas partes.</p>
+  <div aria-hidden="true" class="order-first mb-1 shrink-0 h-[21rem] flex items-center justify-center"><div class="flex w-full flex-col gap-3 rounded-key border-[3px] border-ink bg-fog p-4 text-sm">
+    <div class="flex items-center justify-between gap-3"><span class="font-medium">Logo</span><span class="font-bold">Entregado</span></div>
+    <div class="flex items-center justify-between gap-3 border-t-2 border-ink pt-3"><span class="font-medium">Colores</span><span class="flex gap-1.5"><span class="h-4 w-4 rounded-sm border-2 border-ink bg-lime"></span><span class="h-4 w-4 rounded-sm border-2 border-ink bg-sun"></span><span class="h-4 w-4 rounded-sm border-2 border-ink bg-lilac"></span><span class="h-4 w-4 rounded-sm border-2 border-ink bg-white"></span></span></div>
+    <div class="flex items-center justify-between gap-3 border-t-2 border-ink pt-3"><span class="font-medium">Tipografía</span><span class="font-bold">Poppins</span></div>
+  </div>
+  </div>
+</li>
+<li class="flex flex-col gap-5 rounded-key-lg border-[3px] border-ink bg-white p-7 shadow-depth-md transition-transform duration-150 motion-safe:hover:-translate-x-px motion-safe:hover:translate-y-px">
+  <h3 class="text-xl font-medium leading-7">Creación de web</h3>
+  <p class="text-base font-light leading-7">Tu web profesional, clara, visible y hecha a la medida de tu marca o negocio.</p>
+  <div aria-hidden="true" class="relative order-first mb-1 shrink-0 h-[21rem] rounded-key-lg border-[3px] border-ink bg-fog p-3 shadow-depth-sm">
+    <div class="overflow-hidden rounded-key border-[3px] border-ink bg-white">
+      <div class="flex items-center gap-2 border-b-[3px] border-ink bg-fog px-3 py-2"><span class="h-2.5 w-2.5 rounded-full border-2 border-ink bg-white"></span><span class="h-2.5 w-2.5 rounded-full border-2 border-ink bg-white"></span><span class="h-2.5 w-2.5 rounded-full border-2 border-ink bg-white"></span><span class="ml-2 flex-1 rounded-md border-2 border-ink bg-white px-2 py-0.5 text-xs text-muted">tunegocio.com</span></div>
+      <div class="flex items-center justify-between border-b-2 border-ink px-3 py-2"><span class="flex items-center gap-1.5"><span class="h-4 w-4 rounded-sm border-2 border-ink bg-lime"></span><span class="block h-2 w-12 rounded-sm bg-ink"></span></span><span class="flex items-center gap-2"><span class="block h-1.5 w-5 rounded-sm bg-circuit"></span><span class="block h-1.5 w-5 rounded-sm bg-circuit"></span><span class="block h-1.5 w-5 rounded-sm bg-circuit"></span></span></div>
+      <div class="relative h-16 overflow-hidden border-b-2 border-ink bg-gradient-to-br from-lilac to-lime">
+        <span class="absolute left-3 top-3 h-9 w-24 rounded-md border-2 border-ink bg-ink"></span>
+        <span class="absolute bottom-2 right-3 h-8 w-12 rounded-md border-2 border-ink bg-sun"></span>
+        <span class="absolute right-3 top-3 rounded-key border-2 border-ink bg-white px-2 py-1 text-[10px] font-medium">Nuevo</span>
+      </div>
+      <div class="flex flex-col gap-2 p-3"><span class="block h-3 w-3/4 rounded-sm bg-ink"></span><span class="block h-2 w-1/2 rounded-sm bg-circuit"></span><span class="mt-1 inline-block h-7 w-24 rounded-key border-2 border-ink bg-lime shadow-depth-sm"></span>
+        <div class="mt-2 grid grid-cols-3 gap-2"><span class="block h-14 rounded-md border-2 border-ink bg-fog"></span><span class="block h-14 rounded-md border-2 border-ink bg-fog"></span><span class="block h-14 rounded-md border-2 border-ink bg-fog"></span></div></div>
+    </div>
+  </div>
+</li>
+<li class="flex flex-col gap-5 rounded-key-lg border-[3px] border-ink bg-white p-7 shadow-depth-md transition-transform duration-150 motion-safe:hover:-translate-x-px motion-safe:hover:translate-y-px">
+  <h3 class="text-xl font-medium leading-7">Mejora basada en datos</h3>
+  <p class="text-base font-light leading-7">Vemos dónde abandonan tus visitantes, lo corregimos y hacemos que más personas te escriban.</p>
+  <div aria-hidden="true" class="order-first mb-1 shrink-0 h-[21rem] flex items-center justify-center"><div class="w-full rounded-key border-[3px] border-ink bg-ink p-4 text-sm text-white">
+    <p class="mb-2 text-xs uppercase tracking-[0.15em] text-[#BDBDBD]">Este mes</p>
+    <div class="flex items-center justify-between border-b border-[#333] py-2"><span>Abandonos revisados</span><span class="font-bold text-lime">Sí</span></div>
+    <div class="flex items-center justify-between border-b border-[#333] py-2"><span>Cambios hechos</span><span class="font-bold text-lime">Sí</span></div>
+    <div class="flex items-center justify-between py-2"><span>Reporte enviado</span><span class="font-bold text-lime">Sí</span></div>
+  </div>
+  </div>
+</li>
+<li class="flex flex-col gap-5 rounded-key-lg border-[3px] border-ink bg-white p-7 shadow-depth-md transition-transform duration-150 motion-safe:hover:-translate-x-px motion-safe:hover:translate-y-px">
+  <h3 class="text-xl font-medium leading-7">Cambios al instante</h3>
+  <p class="text-base font-light leading-7">Pídenos un ajuste y lo hacemos sin esperas largas ni procesos complicados.</p>
+  <div aria-hidden="true" class="order-first mb-1 shrink-0 h-[21rem] flex flex-col gap-2 rounded-key border-[3px] border-ink bg-fog p-4 text-sm">
+    <span class="block max-w-[85%] shrink-0 self-start rounded-key border-2 border-ink bg-white px-3 py-2 leading-5">¿Podemos cambiar el botón a otro color?</span>
+    <span class="block max-w-[85%] shrink-0 self-end rounded-key border-2 border-ink bg-lime px-3 py-2 leading-5">Hecho. Ya está en línea.</span>
+    <span class="inline-flex shrink-0 items-center gap-2 self-end rounded-full border-2 border-ink bg-white px-3 py-1 text-xs font-medium"><span class="h-2 w-2 rounded-full border border-ink bg-lime"></span>En línea</span>
+  </div>
+</li>
+    </ul>
+    <div class="flex justify-center">
+  <a href="#explora" data-scroll class="key-btn min-h-[52px] bg-white px-6 text-sm">Siguiente: Explora <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" ><path d="M12 5v14M6 13l6 6 6-6"/></svg></a>
+</div>
+  </div>
+</section>
+
+<!-- ============ 3 · EXPLORA (demostración interactiva) ============ -->
+<section id="explora" tabindex="-1" class="bg-fog px-4 py-20 sm:py-24">
+  <div class="mx-auto flex max-w-6xl flex-col gap-10">
+    <header class="flex max-w-2xl flex-col gap-4">
+      <span class="eyebrow">Explora</span>
+      <h2 class="text-balance text-3xl font-bold leading-10 sm:text-4xl sm:leading-[1.2]">Mira cómo se ve cada servicio.</h2>
+    </header>
+
+    <div id="demo" class="flex flex-col gap-6">
+      <div class="flex flex-wrap items-center gap-3">
+        <button type="button" id="demo-prev" aria-label="Servicio anterior" class="key-btn h-12 w-12 bg-white"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" ><path d="M19 12H5M11 6l-6 6 6 6"/></svg></button>
+        <div role="tablist" aria-label="Servicios" class="flex flex-1 flex-wrap gap-3">
+          <button type="button" role="tab" id="tab-web" aria-controls="panel-web" aria-selected="true" tabindex="0" data-color="#FFD23F" class="tab key-btn min-h-[48px] bg-white px-5 text-sm">Sitios web</button>
+<button type="button" role="tab" id="tab-tienda" aria-controls="panel-tienda" aria-selected="false" tabindex="-1" data-color="#FF5A4F" class="tab key-btn min-h-[48px] bg-white px-5 text-sm">E-commerce</button>
+<button type="button" role="tab" id="tab-landing" aria-controls="panel-landing" aria-selected="false" tabindex="-1" data-color="#C6F432" class="tab key-btn min-h-[48px] bg-white px-5 text-sm">Landing pages</button>
+<button type="button" role="tab" id="tab-seo" aria-controls="panel-seo" aria-selected="false" tabindex="-1" data-color="#B197FC" class="tab key-btn min-h-[48px] bg-white px-5 text-sm">SEO y velocidad</button>
+        </div>
+        <button type="button" id="demo-next" aria-label="Servicio siguiente" class="key-btn h-12 w-12 bg-white"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" ><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+      </div>
+
+      <div class="rounded-key-lg border-[3px] border-ink bg-white shadow-depth-md">
+        <div role="tabpanel" id="panel-web" aria-labelledby="tab-web" tabindex="0"  class="grid items-center gap-10 p-6 sm:p-10 lg:grid-cols-2">
+  <div class="flex flex-col gap-5">
+    <span class="eyebrow">Sitios web</span>
+    <h3 class="text-balance text-2xl font-bold leading-8 sm:text-3xl sm:leading-10">Sitios web que presentan tu negocio</h3>
+    <p class="text-base font-light leading-7">Páginas claras y rápidas, pensadas para que tus clientes entiendan qué ofreces y te contacten.</p>
+    <ul class="flex flex-col gap-3"><li class="flex items-start gap-3 text-base font-normal leading-6"><span class="key mt-0.5 h-6 w-6 shrink-0 !rounded-md !border-2 bg-sun !shadow-none"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" ><path d="M4 12l5 5L20 6"/></svg></span>Diseño propio con tu marca</li><li class="flex items-start gap-3 text-base font-normal leading-6"><span class="key mt-0.5 h-6 w-6 shrink-0 !rounded-md !border-2 bg-sun !shadow-none"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" ><path d="M4 12l5 5L20 6"/></svg></span>Estructura clara en varias páginas</li><li class="flex items-start gap-3 text-base font-normal leading-6"><span class="key mt-0.5 h-6 w-6 shrink-0 !rounded-md !border-2 bg-sun !shadow-none"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" ><path d="M4 12l5 5L20 6"/></svg></span>SEO y analítica desde el inicio</li><li class="flex items-start gap-3 text-base font-normal leading-6"><span class="key mt-0.5 h-6 w-6 shrink-0 !rounded-md !border-2 bg-sun !shadow-none"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" ><path d="M4 12l5 5L20 6"/></svg></span>Fácil de actualizar</li></ul>
+  </div>
+  <div aria-hidden="true" class="overflow-hidden rounded-key-lg border-[3px] border-ink bg-white shadow-depth-md"><div class="flex items-center gap-1.5 border-b-[3px] border-ink bg-fog px-3 py-2"><span class="h-2.5 w-2.5 rounded-sm border-2 border-ink bg-white"></span><span class="h-2.5 w-2.5 rounded-sm border-2 border-ink bg-white"></span><span class="h-2.5 w-2.5 rounded-sm border-2 border-ink bg-white"></span><span class="ml-2 h-3 flex-1 rounded-md border-2 border-ink bg-white"></span></div><div class="flex flex-col gap-3 p-4"><div class="flex items-center justify-between"><span class="h-4 w-14 rounded-md border-2 border-ink bg-sun"></span><span class="flex gap-2"><span class="block h-2 w-8 rounded-md border-2 border-ink bg-fog"></span><span class="block h-2 w-8 rounded-md border-2 border-ink bg-fog"></span><span class="block h-2 w-8 rounded-md border-2 border-ink bg-fog"></span></span></div>
+<div class="flex flex-col gap-2 rounded-key border-[3px] border-ink bg-sun p-4"><span class="block h-3 w-3/4 rounded-md bg-ink"></span><span class="block h-3 w-1/2 rounded-md bg-ink"></span><span class="mt-2 block h-6 w-20 rounded-md border-2 border-ink bg-white"></span></div>
+<div class="grid grid-cols-3 gap-3"><span class="h-14 rounded-key border-[3px] border-ink bg-white"></span><span class="h-14 rounded-key border-[3px] border-ink bg-white"></span><span class="h-14 rounded-key border-[3px] border-ink bg-white"></span></div></div></div>
+</div>
+<div role="tabpanel" id="panel-tienda" aria-labelledby="tab-tienda" tabindex="0" hidden class="grid items-center gap-10 p-6 sm:p-10 lg:grid-cols-2">
+  <div class="flex flex-col gap-5">
+    <span class="eyebrow">E-commerce</span>
+    <h3 class="text-balance text-2xl font-bold leading-8 sm:text-3xl sm:leading-10">Tiendas online fáciles de comprar</h3>
+    <p class="text-base font-light leading-7">Catálogo, carrito y pagos en pasos simples: precio visible y un solo botón de compra.</p>
+    <ul class="flex flex-col gap-3"><li class="flex items-start gap-3 text-base font-normal leading-6"><span class="key mt-0.5 h-6 w-6 shrink-0 !rounded-md !border-2 bg-coral !shadow-none"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" ><path d="M4 12l5 5L20 6"/></svg></span>Catálogo de productos</li><li class="flex items-start gap-3 text-base font-normal leading-6"><span class="key mt-0.5 h-6 w-6 shrink-0 !rounded-md !border-2 bg-coral !shadow-none"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" ><path d="M4 12l5 5L20 6"/></svg></span>Checkout en cuatro pasos</li><li class="flex items-start gap-3 text-base font-normal leading-6"><span class="key mt-0.5 h-6 w-6 shrink-0 !rounded-md !border-2 bg-coral !shadow-none"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" ><path d="M4 12l5 5L20 6"/></svg></span>Pagos online</li><li class="flex items-start gap-3 text-base font-normal leading-6"><span class="key mt-0.5 h-6 w-6 shrink-0 !rounded-md !border-2 bg-coral !shadow-none"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" ><path d="M4 12l5 5L20 6"/></svg></span>SEO técnico</li></ul>
+  </div>
+  <div aria-hidden="true" class="overflow-hidden rounded-key-lg border-[3px] border-ink bg-white shadow-depth-md"><div class="flex items-center gap-1.5 border-b-[3px] border-ink bg-fog px-3 py-2"><span class="h-2.5 w-2.5 rounded-sm border-2 border-ink bg-white"></span><span class="h-2.5 w-2.5 rounded-sm border-2 border-ink bg-white"></span><span class="h-2.5 w-2.5 rounded-sm border-2 border-ink bg-white"></span><span class="ml-2 h-3 flex-1 rounded-md border-2 border-ink bg-white"></span></div><div class="flex flex-col gap-3 p-4"><div class="flex items-center justify-between"><span class="h-4 w-14 rounded-md border-2 border-ink bg-white"></span><span class="h-5 w-5 rounded-md border-2 border-ink bg-coral"></span></div>
+<div class="grid grid-cols-3 gap-3"><div class="flex flex-col gap-2 rounded-key border-[3px] border-ink bg-white p-2"><span class="block h-14 rounded-md border-2 border-ink bg-fog"></span><span class="block h-2 w-2/3 rounded-md border-2 border-ink bg-fog"></span><span class="block h-5 w-full rounded-md border-2 border-ink bg-coral"></span></div><div class="flex flex-col gap-2 rounded-key border-[3px] border-ink bg-white p-2"><span class="block h-14 rounded-md border-2 border-ink bg-fog"></span><span class="block h-2 w-2/3 rounded-md border-2 border-ink bg-fog"></span><span class="block h-5 w-full rounded-md border-2 border-ink bg-coral"></span></div><div class="flex flex-col gap-2 rounded-key border-[3px] border-ink bg-white p-2"><span class="block h-14 rounded-md border-2 border-ink bg-fog"></span><span class="block h-2 w-2/3 rounded-md border-2 border-ink bg-fog"></span><span class="block h-5 w-full rounded-md border-2 border-ink bg-coral"></span></div></div>
+<div class="flex gap-2"><span class="h-6 flex-1 rounded-md border-2 border-ink bg-coral"></span><span class="h-6 w-6 rounded-md border-2 border-ink bg-white"></span><span class="h-6 w-6 rounded-md border-2 border-ink bg-white"></span><span class="h-6 w-6 rounded-md border-2 border-ink bg-white"></span></div></div></div>
+</div>
+<div role="tabpanel" id="panel-landing" aria-labelledby="tab-landing" tabindex="0" hidden class="grid items-center gap-10 p-6 sm:p-10 lg:grid-cols-2">
+  <div class="flex flex-col gap-5">
+    <span class="eyebrow">Landing pages</span>
+    <h3 class="text-balance text-2xl font-bold leading-8 sm:text-3xl sm:leading-10">Una página, una acción</h3>
+    <p class="text-base font-light leading-7">Un mensaje principal y una llamada a la acción visible para lanzar una idea o captar contactos.</p>
+    <ul class="flex flex-col gap-3"><li class="flex items-start gap-3 text-base font-normal leading-6"><span class="key mt-0.5 h-6 w-6 shrink-0 !rounded-md !border-2 bg-lime !shadow-none"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" ><path d="M4 12l5 5L20 6"/></svg></span>Estructura enfocada en conversión</li><li class="flex items-start gap-3 text-base font-normal leading-6"><span class="key mt-0.5 h-6 w-6 shrink-0 !rounded-md !border-2 bg-lime !shadow-none"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" ><path d="M4 12l5 5L20 6"/></svg></span>Formulario de contacto</li><li class="flex items-start gap-3 text-base font-normal leading-6"><span class="key mt-0.5 h-6 w-6 shrink-0 !rounded-md !border-2 bg-lime !shadow-none"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" ><path d="M4 12l5 5L20 6"/></svg></span>Carga rápida</li><li class="flex items-start gap-3 text-base font-normal leading-6"><span class="key mt-0.5 h-6 w-6 shrink-0 !rounded-md !border-2 bg-lime !shadow-none"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" ><path d="M4 12l5 5L20 6"/></svg></span>Lista para tus campañas</li></ul>
+  </div>
+  <div aria-hidden="true" class="overflow-hidden rounded-key-lg border-[3px] border-ink bg-white shadow-depth-md"><div class="flex items-center gap-1.5 border-b-[3px] border-ink bg-fog px-3 py-2"><span class="h-2.5 w-2.5 rounded-sm border-2 border-ink bg-white"></span><span class="h-2.5 w-2.5 rounded-sm border-2 border-ink bg-white"></span><span class="h-2.5 w-2.5 rounded-sm border-2 border-ink bg-white"></span><span class="ml-2 h-3 flex-1 rounded-md border-2 border-ink bg-white"></span></div><div class="flex flex-col gap-3 p-4"><div class="flex flex-col items-center gap-3 py-3 text-center"><span class="block h-4 w-3/4 rounded-md bg-ink"></span><span class="block h-4 w-1/2 rounded-md bg-ink"></span><span class="block h-2 w-2/3 rounded-md border-2 border-ink bg-white"></span><span class="mt-2 block h-10 w-36 rounded-key border-[3px] border-ink bg-lime shadow-depth-sm"></span></div>
+<div class="grid grid-cols-3 gap-3"><span class="h-10 rounded-key border-[3px] border-ink bg-white"></span><span class="h-10 rounded-key border-[3px] border-ink bg-white"></span><span class="h-10 rounded-key border-[3px] border-ink bg-white"></span></div></div></div>
+</div>
+<div role="tabpanel" id="panel-seo" aria-labelledby="tab-seo" tabindex="0" hidden class="grid items-center gap-10 p-6 sm:p-10 lg:grid-cols-2">
+  <div class="flex flex-col gap-5">
+    <span class="eyebrow">SEO y velocidad</span>
+    <h3 class="text-balance text-2xl font-bold leading-8 sm:text-3xl sm:leading-10">Mide, optimiza y mejora</h3>
+    <p class="text-base font-light leading-7">Revisamos velocidad, posicionamiento y experiencia, y mejoramos tu sitio versión tras versión.</p>
+    <ul class="flex flex-col gap-3"><li class="flex items-start gap-3 text-base font-normal leading-6"><span class="key mt-0.5 h-6 w-6 shrink-0 !rounded-md !border-2 bg-lilac !shadow-none"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" ><path d="M4 12l5 5L20 6"/></svg></span>Revisión de velocidad</li><li class="flex items-start gap-3 text-base font-normal leading-6"><span class="key mt-0.5 h-6 w-6 shrink-0 !rounded-md !border-2 bg-lilac !shadow-none"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" ><path d="M4 12l5 5L20 6"/></svg></span>SEO técnico y de contenido</li><li class="flex items-start gap-3 text-base font-normal leading-6"><span class="key mt-0.5 h-6 w-6 shrink-0 !rounded-md !border-2 bg-lilac !shadow-none"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" ><path d="M4 12l5 5L20 6"/></svg></span>Analítica para medir</li><li class="flex items-start gap-3 text-base font-normal leading-6"><span class="key mt-0.5 h-6 w-6 shrink-0 !rounded-md !border-2 bg-lilac !shadow-none"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" ><path d="M4 12l5 5L20 6"/></svg></span>Mejoras continuas</li></ul>
+  </div>
+  <div aria-hidden="true" class="overflow-hidden rounded-key-lg border-[3px] border-ink bg-white shadow-depth-md"><div class="flex items-center gap-1.5 border-b-[3px] border-ink bg-fog px-3 py-2"><span class="h-2.5 w-2.5 rounded-sm border-2 border-ink bg-white"></span><span class="h-2.5 w-2.5 rounded-sm border-2 border-ink bg-white"></span><span class="h-2.5 w-2.5 rounded-sm border-2 border-ink bg-white"></span><span class="ml-2 h-3 flex-1 rounded-md border-2 border-ink bg-white"></span></div><div class="flex flex-col gap-3 p-4"><div class="flex items-center gap-2 rounded-key border-[3px] border-ink bg-white px-3 py-2"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" ><circle cx="11" cy="11" r="6"/><path d="M20 20l-4.5-4.5"/></svg><span class="block h-3 w-1/2 rounded-md bg-fog"></span></div>
+<div class="flex flex-col gap-1.5 rounded-key border-[3px] border-ink bg-lilac p-2.5"><span class="block h-2 w-1/3 rounded-md border-2 border-ink bg-ink"></span><span class="block h-2 w-full rounded-md border-2 border-ink bg-white"></span></div><div class="flex flex-col gap-1.5 rounded-key border-[3px] border-ink bg-white p-2.5"><span class="block h-2 w-1/3 rounded-md border-2 border-ink bg-ink"></span><span class="block h-2 w-full rounded-md border-2 border-ink bg-white"></span></div>
+<div class="flex items-center gap-3"><span class="text-xs font-medium">Carga</span><span class="h-4 flex-1 overflow-hidden rounded-md border-2 border-ink bg-white"><span class="block h-full w-[88%] bg-lilac"></span></span></div></div></div>
+</div>
+      </div>
+    </div>
+
+    <div class="flex justify-center">
+  <a href="#contacto" data-scroll class="key-btn min-h-[52px] bg-white px-6 text-sm">Siguiente: Contacto <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" ><path d="M12 5v14M6 13l6 6 6-6"/></svg></a>
+</div>
+  </div>
+</section>
+
+<!-- ============ 4 · CIERRE CÍCLICO ============ -->
+<section id="contacto" tabindex="-1" class="on-dark bg-ink text-white">
+  <div class="mx-auto flex max-w-3xl flex-col items-center gap-8 px-4 py-20 text-center sm:py-24">
+    <svg class="w-[min(78vw,300px)] h-auto" viewBox="-2 -2 400 104" role="img" aria-label="CTRL.web" style="--face:#FF5A4F;--line:#FFFFFF;--txt:#FFFFFF;--ink:#0A0A0A">
+  <use href="#tecla-g"/>
+  <text x="115" y="81" font-size="83" font-weight="700" fill="var(--txt)" textLength="150" lengthAdjust="spacingAndGlyphs">TRL</text>
+  <text x="271" y="81" font-size="52" font-weight="500" fill="var(--txt)" textLength="120" lengthAdjust="spacingAndGlyphs">.web</text>
+</svg>
+    <h2 class="text-balance text-4xl font-bold leading-[1.1] sm:text-5xl">¿Prefieres hablarlo directamente?</h2>
+    <p class="max-w-xl text-lg font-light leading-8">Escríbenos y lo conversamos juntos. Te respondemos con una propuesta clara y sin compromiso.</p>
+
+    <div class="flex flex-wrap justify-center gap-5">
+      <a data-contact="whatsapp" href="#contacto" class="key-btn min-h-[56px] bg-coral px-8 text-base"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" ><path d="M4 5h16v11H9l-5 4z"/></svg> Escribir por WhatsApp</a>
+      <a data-contact="email" href="mailto:crtl.web.ec@gmail.com" class="key-btn min-h-[56px] bg-white px-8 text-base"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" ><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg> Escribir por correo</a>
+    </div>
+
+    <div class="flex flex-col items-center gap-3 pt-6">
+      <a href="#inicio" data-scroll class="key-btn min-h-[56px] bg-sun px-8 text-base">Volver arriba <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" ><path d="M12 19V5M6 11l6-6 6 6"/></svg></a>
+      <span class="text-sm font-light text-[#BDBDBD]">y empieza el recorrido de nuevo</span>
+    </div>
+  </div>
+
+  <footer class="border-t-[3px] border-white px-4 pb-24 pt-8 md:pb-8">
+    <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 text-sm">
+      <span class="font-bold">CTRL.web</span>
+      <nav aria-label="Pie de página" class="flex flex-wrap gap-x-6 gap-y-2 font-medium">
+        <a data-scroll href="#inicio" class="underline-offset-4 hover:underline">Inicio</a>
+        <a data-scroll href="#valor" class="underline-offset-4 hover:underline">Valor</a>
+        <a data-scroll href="#explora" class="underline-offset-4 hover:underline">Explora</a>
+        <a data-scroll href="#contacto" class="underline-offset-4 hover:underline">Contacto</a>
+      </nav>
+      <span class="font-light text-[#BDBDBD]">© 2026 CTRL.web · Ecuador · EE. UU. · España</span>
+    </div>
+  </footer>
+</section>
+
+</main>
+
+<!-- ============ JavaScript vanilla ============ -->
+<script>
+(() => {
+  'use strict';
+
+  /* ---------- Configuración editable ---------- */
+  const CONFIG = {
+    whatsapp: '',            // Ej.: '593999999999' (código de país + número, sin + ni espacios)
+    email: 'crtl.web.ec@gmail.com',               // Ej.: 'hola@tudominio.com'
+    whatsappMessage: 'Hola, quiero mi web con CTRL.web.',
+    phrases: [
+      'Tu web, bajo control.',
+      'Sitios web que generan confianza.',
+      'Tiendas online claras y rápidas.',
+      'Landing pages para lanzar tu idea.',
+      'Diseño, desarrollo y optimización.'
+    ],
+    typing: { type: 55, erase: 28, hold: 1700, gap: 350 },
+    tabsAutoplayMs: 7000
+  };
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const $ = (sel, root = document) => root.querySelector(sel);
+  const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
+
+  /* ---------- Efecto typing en bucle ---------- */
+  const Typing = {
+    init(el, phrases, t) {
+      if (!el || reduceMotion) return;              // sin movimiento: se queda la frase completa
+      let i = 0, n = phrases[0].length, erasing = true;
+      const tick = () => {
+        const phrase = phrases[i];
+        if (!erasing) {
+          el.textContent = phrase.slice(0, ++n);
+          if (n === phrase.length) { erasing = true; return setTimeout(tick, t.hold); }
+          return setTimeout(tick, t.type);
+        }
+        el.textContent = phrase.slice(0, --n);
+        if (n === 0) { erasing = false; i = (i + 1) % phrases.length; return setTimeout(tick, t.gap); }
+        setTimeout(tick, t.erase);
+      };
+      setTimeout(tick, t.hold);
+    }
+  };
+
+  /* ---------- Desplazamiento suave entre secciones ---------- */
+  const SmoothScroll = {
+    init() {
+      $$('[data-scroll]').forEach((a) => a.addEventListener('click', (e) => {
+        const id = a.getAttribute('href').slice(1);
+        const target = document.getElementById(id);
+        if (!target) return;
+        e.preventDefault();
+        target.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'start' });
+        target.focus({ preventScroll: true });
+        try { history.replaceState(null, '', '#' + id); } catch (_) { /* entorno restringido */ }
+      }));
+    }
+  };
+
+  /* ---------- Navegador de secciones (punto activo) ---------- */
+  const SectionNav = {
+    init() {
+      const dots = $$('[data-dot]');
+      const sections = dots.map((d) => document.getElementById(d.dataset.dot)).filter(Boolean);
+      const setActive = (id) => dots.forEach((d) => {
+        if (d.dataset.dot === id) d.setAttribute('aria-current', 'true'); else d.removeAttribute('aria-current');
+      });
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((en) => { if (en.isIntersecting) setActive(en.target.id); });
+      }, { rootMargin: '-45% 0px -45% 0px' });
+      sections.forEach((s) => io.observe(s));
+      setActive('inicio');
+    }
+  };
+
+  /* ---------- Pestañas con ciclo (anterior / siguiente) ---------- */
+  const Tabs = {
+    init() {
+      const tabs = $$('[role="tab"]');
+      const panels = tabs.map((t) => document.getElementById(t.getAttribute('aria-controls')));
+      const root = $('#demo');
+      let current = 0, timer = null, userTookOver = false, inView = false;
+
+      const select = (idx, focus = false) => {
+        current = (idx + tabs.length) % tabs.length;     // ciclo continuo
+        tabs.forEach((t, i) => {
+          const on = i === current;
+          t.setAttribute('aria-selected', String(on));
+          t.tabIndex = on ? 0 : -1;
+          t.style.setProperty('--tab-color', t.dataset.color);
+          panels[i].hidden = !on;
+        });
+        if (focus) tabs[current].focus();
+      };
+      const stop = () => { clearInterval(timer); timer = null; };
+      const start = () => {
+        if (reduceMotion || userTookOver || timer || !inView) return;
+        timer = setInterval(() => select(current + 1), CONFIG.tabsAutoplayMs);
+      };
+      const takeOver = () => { userTookOver = true; stop(); };
+
+      tabs.forEach((t, i) => {
+        t.addEventListener('click', () => { takeOver(); select(i); });
+        t.addEventListener('keydown', (e) => {
+          const map = { ArrowRight: current + 1, ArrowLeft: current - 1, Home: 0, End: tabs.length - 1 };
+          if (e.key in map) { e.preventDefault(); takeOver(); select(map[e.key], true); }
+        });
+      });
+      $('#demo-prev').addEventListener('click', () => { takeOver(); select(current - 1); });
+      $('#demo-next').addEventListener('click', () => { takeOver(); select(current + 1); });
+      root.addEventListener('mouseenter', stop);
+      root.addEventListener('mouseleave', start);
+      root.addEventListener('focusin', takeOver);
+
+      new IntersectionObserver(([en]) => { inView = en.isIntersecting; inView ? start() : stop(); }, { threshold: 0.35 }).observe(root);
+      select(0);
+    }
+  };
+
+  /* ---------- Enlaces de contacto desde CONFIG ---------- */
+  const Contact = {
+    init(cfg) {
+      const wa = cfg.whatsapp.replace(/\D/g, '');
+      const links = {
+        whatsapp: wa ? `https://wa.me/${wa}?text=${encodeURIComponent(cfg.whatsappMessage)}` : null,
+        email: cfg.email ? `mailto:${cfg.email}` : null
+      };
+      $$('[data-contact]').forEach((a) => { const href = links[a.dataset.contact]; if (href) a.href = href; });
+      $$('[data-contact-text]').forEach((s) => {
+        const v = s.dataset.contactText === 'whatsapp' ? (wa ? '+' + wa : '') : cfg.email;
+        if (v) s.textContent = v;
+      });
+    }
+  };
+
+  /* ---------- Formulario de registro ----------
+     Sin servidor: al enviar abre WhatsApp (si hay número en CONFIG) o el correo (si hay email).
+     Para recibir envíos reales, conecta aquí tu servicio de formularios. */
+  const SignupForm = {
+    init(cfg) {
+      const form = $('#registro-form');
+      if (!form) return;
+      const status = $('#rg-status');
+      const isEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+      const isValid = (el) => {
+        if (el.type === 'checkbox') return el.checked;
+        const v = el.value.trim();
+        if (el.type === 'email') return isEmail(v);
+        if (el.type === 'tel') return v.replace(/\D/g, '').length >= 7;
+        return v !== '';
+      };
+      const mark = (el, bad) => {
+        el.setAttribute('aria-invalid', String(bad));
+        el.classList.toggle('!border-coral', bad);
+      };
+      const required = () => Array.from(form.querySelectorAll('[required]'));
+      required().forEach((el) => {
+        el.addEventListener('input', () => mark(el, false));
+        el.addEventListener('change', () => mark(el, false));
+      });
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        let first = null;
+        required().forEach((el) => {
+          const bad = !isValid(el);
+          mark(el, bad);
+          if (bad && !first) first = el;
+        });
+        if (first) {
+          status.textContent = 'Revisa los campos marcados y vuelve a intentarlo.';
+          first.focus();
+          return;
+        }
+        const d = new FormData(form);
+        const nombre = String(d.get('nombre') || '').trim();
+        const whatsapp = String(d.get('whatsapp') || '').trim();
+        const email = String(d.get('email') || '').trim();
+        const mensaje = String(d.get('mensaje') || '').trim();
+        const texto = `Nombre: ${nombre}\nWhatsApp: ${whatsapp}\nCorreo: ${email}\n\n${mensaje}`;
+        const wa = cfg.whatsapp.replace(/\D/g, '');
+        if (wa) {
+          window.open(`https://wa.me/${wa}?text=${encodeURIComponent(texto)}`, '_blank', 'noopener');
+        } else if (cfg.email) {
+          location.href = `mailto:${cfg.email}?subject=${encodeURIComponent('Nuevo proyecto · CTRL.web')}&body=${encodeURIComponent(texto)}`;
+        } else {
+          status.textContent = 'Aún no hay un canal de contacto configurado.';
+          return;
+        }
+        status.textContent = '¡Listo! Recibimos tu mensaje y te escribiremos por WhatsApp o correo en menos de 24 h. Mientras tanto, mira cómo trabajamos.';
+        form.reset();
+      });
+    }
+  };
+
+  document.addEventListener('DOMContentLoaded', () => {
+    Typing.init($('#typed'), CONFIG.phrases, CONFIG.typing);
+    SmoothScroll.init();
+    SectionNav.init();
+    Tabs.init();
+    Contact.init(CONFIG);
+    SignupForm.init(CONFIG);
+  });
+})();
+</script>
+</body>
+</html>
+
+</body></html>
