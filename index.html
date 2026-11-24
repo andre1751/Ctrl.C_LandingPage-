@@ -153,6 +153,7 @@
     </header>
 
     <form id="registro-form" novalidate class="w-full rounded-key-lg border-[3px] border-coral bg-white p-6 text-left shadow-depth-md sm:p-8">
+      <div aria-hidden="true" style="position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden"><label>No llenar este campo<input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
       <div class="grid gap-5 sm:grid-cols-2">
         <div class="flex flex-col gap-2">
           <label for="rg-nombre" class="text-sm font-medium">Tu nombre</label>
@@ -371,7 +372,8 @@
   /* ---------- Configuración editable ---------- */
   const CONFIG = {
     whatsapp: '',            // Ej.: '593999999999' (código de país + número, sin + ni espacios)
-    email: 'crtl.web.ec@gmail.com',               // Ej.: 'hola@tudominio.com'
+    email: 'crtl.web.ec@gmail.com',
+    sheetsUrl: 'https://script.google.com/macros/s/AKfycbz9Lv7HnM578jfWldoLIk4zjegBgc1e8mGtN1JQjEu5G_WJvV2OoMTU57_8fiVnv32a/exec',               // Ej.: 'hola@tudominio.com'
     whatsappMessage: 'Hola, quiero mi web con CTRL.web.',
     phrases: [
       'Tu web, bajo control.',
@@ -526,6 +528,7 @@
       });
       form.addEventListener('submit', (e) => {
         e.preventDefault();
+        if (form.elements.website && form.elements.website.value) { form.reset(); return; }
         let first = null;
         required().forEach((el) => {
           const bad = !isValid(el);
@@ -543,6 +546,18 @@
         const email = String(d.get('email') || '').trim();
         const mensaje = String(d.get('mensaje') || '').trim();
         const texto = `Nombre: ${nombre}\nWhatsApp: ${whatsapp}\nCorreo: ${email}\n\n${mensaje}`;
+        if (cfg.sheetsUrl) {
+          status.textContent = 'Enviando...';
+          fetch(cfg.sheetsUrl, { method: 'POST', mode: 'no-cors', body: new FormData(form) })
+            .then(() => {
+              status.textContent = '¡Listo! Recibimos tu mensaje y te escribiremos por WhatsApp o correo en menos de 24 h. Mientras tanto, mira cómo trabajamos.';
+              form.reset();
+            })
+            .catch(() => {
+              status.textContent = 'No pudimos enviar tu mensaje. Revisa tu conexión e inténtalo de nuevo.';
+            });
+          return;
+        }
         const wa = cfg.whatsapp.replace(/\D/g, '');
         if (wa) {
           window.open(`https://wa.me/${wa}?text=${encodeURIComponent(texto)}`, '_blank', 'noopener');
